@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Journey of Us - Relationship Game</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(to right, #ff9a9e, #fad0c4);
+            text-align: center;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+        #gameScreen {
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
+            border-radius: 10px;
+        }
+        h1, h2 {
+            color: #ff6f61;
+        }
+        button {
+            background-color: #ff6f61;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px 0;
+            font-size: 16px;
+            display: block;
+            width: 80%;
+            margin: 10px auto;
+        }
+        button:hover {
+            background-color: #e65b50;
+        }
+        #outcome {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #ffefef;
+            border-radius: 10px;
+        }
+        #avatarSelection, #storySelection, #inputSection {
+            display: none;
+        }
+        #progress {
+            margin-top: 20px;
+            font-size: 16px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="inputSection">
+        <h2>Welcome to "Journey of Us"</h2>
+        <p>Please enter your name and your partner's name to begin.</p>
+        <input type="text" id="playerName" placeholder="Your Name">
+        <input type="text" id="partnerName" placeholder="Partner's Name">
+        <button onclick="saveNames()">Next</button>
+    </div>
+
+    <div id="gameScreen" style="display:none;">
+        <h1>Journey of Us</h1>
+        <h2 id="stageTitle">Stage 1: The First Meeting</h2>
+        <p id="story">You've just met <span id="partnerNamePlaceholder"></span> for the first time. It's a beautiful sunny day, and you're at a café. How will you start the conversation?</p>
+        <button onclick="chooseOption(1)">Compliment their smile</button>
+        <button onclick="chooseOption(2)">Ask about their favorite hobbies</button>
+        <button onclick="chooseOption(3)">Make a joke to break the ice</button>
+        <div id="outcome"></div>
+        <div id="progress">Progress: 0%</div>
+    </div>
+
+    <script>
+        let currentStage = 1;
+        let playerName = '';
+        let partnerName = '';
+        let score = 0;
+        let totalStages = 9;
+
+        function saveNames() {
+            playerName = document.getElementById("playerName").value;
+            partnerName = document.getElementById("partnerName").value;
+            if (playerName && partnerName) {
+                document.getElementById("inputSection").style.display = "none";
+                document.getElementById("gameScreen").style.display = "block";
+                document.getElementById("partnerNamePlaceholder").innerText = partnerName;
+            } else {
+                alert("Please enter both your name and your partner's name.");
+            }
+        }
+
+        function chooseOption(option) {
+            const storyElement = document.getElementById("story");
+            const outcome = document.getElementById("outcome");
+
+            if (currentStage === 1) {
+                if (option === 1) {
+                    storyElement.innerText = "You compliment " + partnerName + "'s smile, and they respond warmly, feeling flattered. This opens up a pleasant conversation about how both of you appreciate small, meaningful gestures.";
+                    outcome.innerHTML = `<p><strong>Skill Learned:</strong> Complimenting and appreciating your partner helps build connection and emotional warmth.</p>`;
+                    score += 10;
+                } else if (option === 2) {
+                    storyElement.innerText = "You ask about " + partnerName + "'s favorite hobbies, and they excitedly talk about their love for painting and hiking. You find common ground and bond over shared interests.";
+                    outcome.innerHTML = `<p><strong>Skill Learned:</strong> Showing genuine interest in your partner's passions helps you connect on a deeper level.</p>`;
+                    score += 15;
+                } else if (option === 3) {
+                    storyElement.innerText = "You crack a light-hearted joke, and " + partnerName + " laughs, breaking the initial tension. The conversation becomes more relaxed, and both of you feel comfortable being yourselves.";
+                    outcome.innerHTML = `<p><strong>Skill Learned:</strong> Humor is a powerful tool to relieve tension and create emotional openness in a relationship.</p>`;
+                    score += 20;
+                }
+                nextStageButton();
+            } else if (currentStage === 2) {
+                if (option === 1) {
+                    storyElement.innerText = "You use 'I' statements to express your feelings without blaming " + partnerName + ". Your partner listens attentively and feels respected.";
+                    outcome.innerHTML = `<p><strong>Skill Learned:</strong> Using 'I' statements helps avoid blame and creates a safe space for expressing feelings.</p>`;
+                    score += 10;
+                } else if (option === 2) {
+                    storyElement.innerText = "You take a short break to cool down and come back to the conversation. This helps both of you calm down and discuss things rationally.";
+                    outcome.innerHTML = `<p><strong>Skill Learned:</strong> Taking a break before responding helps manage emotions and prevents escalation of conflict.</p>`;
+                    score += 15;
+                } else if (option === 3) {
+                    storyElement.innerText = "You listen actively and repeat back what " + partnerName + " says. This makes them feel understood, and the misunderstanding is cleared.";
+                    outcome.innerHTML = `<p><strong>Skill Learned:</strong> Active listening fosters better understanding and clears up misunderstandings quickly.</p>`;
+                    score += 20;
+                }
+                nextStageButton();
+            } else if (currentStage === 3) {
+                // Continue adding options and score increments as the stages go on
+                // ...
+                nextStageButton();
+            }
+        }
+
+        function nextStageButton() {
+            updateProgress();
+            const outcome = document.getElementById("outcome");
+            if (currentStage < totalStages) {
+                outcome.innerHTML += `<button onclick="nextStage()">Next Stage</button>`;
+            } else {
+                outcome.innerHTML += `<button onclick="showFinalScore()">See Final Score</button>`;
+            }
+        }
+
+        function nextStage() {
+            currentStage++;
+            const stageTitle = document.getElementById("stageTitle");
+            const storyElement = document.getElementById("story");
+            const outcome = document.getElementById("outcome");
+            outcome.innerHTML = '';  // Clear previous outcome
+
+            if (currentStage === 2) {
+                stageTitle.innerText = "Stage 2: Developing Communication Skills";
+                storyElement.innerText = "You and " + partnerName + " have had a misunderstanding. How will you handle it?";
+            } else if (currentStage === 3) {
+                stageTitle.innerText = "Stage 3: Building Trust";
+                storyElement.innerText = partnerName + " shares something vulnerable with you. How do you respond?";
+            } 
+            // Additional stages here...
+        }
+
+        function updateProgress() {
+            const progress = Math.round((currentStage / totalStages) * 100);
+            document.getElementById("progress").innerText = `Progress: ${progress}%`;
+        }
+
+        function showFinalScore() {
+            const outcome = document.getElementById("outcome");
+            const finalScoreMessage = score >= 100 ? 
+                "You've mastered relationship-building skills! You and your partner have a strong and healthy connection." :
+                "There’s still room for growth. Keep working on communication and understanding in your relationship.";
+            outcome.innerHTML = `<h2>Final Score: ${score} / ${totalStages * 20}</h2><p>${finalScoreMessage}</p>`;
+        }
+
+    </script>
+    
+</body>
+</html>
